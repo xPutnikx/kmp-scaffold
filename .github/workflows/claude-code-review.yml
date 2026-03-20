@@ -1,0 +1,32 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  review:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@v1
+        with:
+          use_bedrock: false
+          direct_prompt: |
+            Review this PR for:
+            1. Architecture alignment with KMP best practices
+            2. Potential issues across platforms (Android/iOS/JVM)
+            3. Missing error handling or edge cases
+            4. DI (Koin) configuration issues
+            5. Compose performance concerns
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
