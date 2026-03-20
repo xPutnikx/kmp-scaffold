@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.net.HttpURLConnection
-import java.net.URL
+import java.net.URI
 
 class JvmNetworkConnectivity(
     private val healthCheckUrl: String = "https://clients3.google.com/generate_204",
@@ -45,7 +45,7 @@ class JvmNetworkConnectivity(
 
     private fun checkReachability(): Boolean {
         return try {
-            val connection = URL(healthCheckUrl).openConnection() as HttpURLConnection
+            val connection = URI(healthCheckUrl).toURL().openConnection() as HttpURLConnection
             connection.requestMethod = "HEAD"
             connection.connectTimeout = TIMEOUT_MS
             connection.readTimeout = TIMEOUT_MS
