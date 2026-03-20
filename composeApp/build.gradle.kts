@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -12,12 +11,10 @@ plugins {
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-    
+    jvmToolchain(21)
+
+    androidTarget()
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -28,121 +25,103 @@ kotlin {
             linkerOpts("-lsqlite3")
         }
     }
-    
+
     jvm()
-    
+
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.architecture)
+            implementation(projects.theme)
+            implementation(projects.core)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.animation)
-            implementation(compose.material)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            api(compose.materialIconsExtended)
+            implementation(libs.androidx.navigation.compose)
 
-            // DataStore for preferences
-            api(libs.androidx.datastore.preferences.core)
-            api(libs.androidx.datastore.core.okio)
-
-            // Koin DI
+            // Koin
             api(libs.koin.core)
             implementation(libs.koin.compose)
-            implementation(libs.koin.composeVM)
+            implementation(libs.koin.compose.viewmodel)
 
-            // Navigation
-            api(libs.precompose)
-
-            // Kotlinx libraries
-            api(libs.kotlinx.atomicfu)
-            implementation(libs.kotlinx.date)
-            implementation(libs.kotlinx.serialization)
+            // Kotlinx
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.okio)
-
-            // File picker
-            implementation(libs.filekit)
-            implementation(libs.filekit.dialogs)
-
-            // Ktor for networking
-            implementation(libs.ktor.core)
-            implementation(libs.ktor.client.cio)
-            implementation(libs.ktor.content.negotiation)
-            implementation(libs.ktor.serialization.json)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
 
             // Database
-            implementation(libs.sqldelight.ext)
-
-            // Image loading
-            implementation(libs.landscapist.coil)
+            implementation(libs.sqldelight.coroutines)
         }
 
         androidMain.dependencies {
             implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
             implementation(compose.uiTooling)
+            implementation(libs.androidx.activity.compose)
             api(libs.androidx.core.ktx)
             implementation(libs.kotlinx.coroutines.android)
             api(libs.koin.android)
-            implementation(libs.ktor.client.okhttp)
             implementation(libs.sqldelight.android)
         }
 
         val iosMain by creating {
             dependsOn(commonMain.get())
             dependencies {
-                implementation(libs.ktor.client.darwin)
                 implementation(libs.sqldelight.native)
             }
         }
 
-        iosArm64Main {
-            dependsOn(iosMain)
-        }
-
-        iosSimulatorArm64Main {
-            dependsOn(iosMain)
-        }
+        iosArm64Main { dependsOn(iosMain) }
+        iosSimulatorArm64Main { dependsOn(iosMain) }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.ktor.client.cio)
-            implementation(libs.koin.core.jvm)
+            implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.sqldelight.jvm)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
+
+    sourceSets.named { it.lowercase().startsWith("ios") }
+        .configureEach {
+            languageSettings {
+                optIn("kotlinx.cinterop.ExperimentalForeignApi")
+            }
+        }
 }
 
 android {
-    namespace = "com.bearminds.passkeep"
+    namespace = "com.bearminds.scaffold"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.bearminds.passkeep"
+        applicationId = "com.bearminds.scaffold"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -155,11 +134,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.bearminds.passkeep.MainKt"
+        mainClass = "com.bearminds.scaffold.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.bearminds.passkeep"
+            packageName = "com.bearminds.scaffold"
             packageVersion = "1.0.0"
         }
     }
@@ -168,7 +147,7 @@ compose.desktop {
 sqldelight {
     databases {
         create("Database") {
-            packageName.set("com.bearminds.passkeep")
+            packageName.set("com.bearminds.scaffold")
         }
     }
 }
