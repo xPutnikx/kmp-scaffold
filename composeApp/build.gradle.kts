@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -98,6 +99,11 @@ kotlin {
         }
 }
 
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) load(file.inputStream())
+}
+
 android {
     namespace = "com.bearminds.scaffold"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -110,6 +116,18 @@ android {
         versionName = "1.0"
     }
 
+    val keystorePath = localProperties.getProperty("KEYSTORE_FILE_PATH")
+    if (keystorePath != null && file(keystorePath).exists()) {
+        signingConfigs {
+            create("release") {
+                storeFile = file(keystorePath)
+                storePassword = localProperties.getProperty("KEYSTORE_PASS")
+                keyAlias = localProperties.getProperty("ALIAS")
+                keyPassword = localProperties.getProperty("ALIAS_PASS")
+            }
+        }
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -119,6 +137,10 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            val releaseSigningConfig = signingConfigs.findByName("release")
+            if (releaseSigningConfig != null) {
+                signingConfig = releaseSigningConfig
+            }
         }
     }
 
