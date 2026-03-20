@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		AC2982145DDF0A588D9DDFC3 /* Passkeep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Passkeep.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC2982145DDF0A588D9DDFC3 /* KmpScaffold.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KmpScaffold.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,7 +59,7 @@
 		C11EBA1A5250B9BBE7AA77E0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AC2982145DDF0A588D9DDFC3 /* Passkeep.app */,
+				AC2982145DDF0A588D9DDFC3 /* KmpScaffold.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = AC2982145DDF0A588D9DDFC3 /* Passkeep.app */;
+			productReference = AC2982145DDF0A588D9DDFC3 /* KmpScaffold.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

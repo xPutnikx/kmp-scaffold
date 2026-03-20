@@ -12,6 +12,7 @@ class RootScreenContract {
     ) : BaseViewModel.ViewState
 
     sealed interface Event : BaseViewModel.ViewEvent {
+        data object OnInitialize : Event
         data object OnSettingsClicked : Event
         data object OnGreetClicked : Event
     }

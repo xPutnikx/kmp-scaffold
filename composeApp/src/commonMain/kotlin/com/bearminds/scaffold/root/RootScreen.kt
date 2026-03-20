@@ -19,6 +19,10 @@ fun HomeScreen(
     val state by viewModel.viewState.collectAsState()
 
     LaunchedEffect(Unit) {
+        viewModel.onEvent(RootScreenContract.Event.OnInitialize)
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is RootScreenContract.Effect.NavigateToSettings -> onNavigateToSettings()

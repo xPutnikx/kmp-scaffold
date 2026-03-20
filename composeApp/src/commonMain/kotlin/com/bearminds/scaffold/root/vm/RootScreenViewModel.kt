@@ -12,12 +12,11 @@ class RootScreenViewModel(
         data = dataBuilder.buildEmptyScreen()
     )
 
-    init {
-        rebuildScreen()
-    }
-
     override fun handleEvent(event: RootScreenContract.Event) {
         when (event) {
+            is RootScreenContract.Event.OnInitialize -> {
+                rebuildScreen()
+            }
             is RootScreenContract.Event.OnSettingsClicked -> {
                 setEffect { RootScreenContract.Effect.NavigateToSettings }
             }
