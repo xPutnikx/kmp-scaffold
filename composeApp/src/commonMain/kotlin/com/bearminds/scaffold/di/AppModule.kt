@@ -9,6 +9,8 @@ import com.bearminds.core.network.networkModule
 import com.bearminds.core.storage.storageModule
 import com.bearminds.scaffold.root.view.HomeScreenDataBuilder
 import com.bearminds.scaffold.root.vm.RootScreenViewModel
+import com.bearminds.scaffold.settings.view.SettingsScreenDataBuilder
+import com.bearminds.scaffold.settings.vm.SettingsViewModel
 import com.bearminds.scaffold.storage.AppPreferences
 import com.bearminds.scaffold.storage.AppPreferencesImpl
 import kotlinx.coroutines.CoroutineScope
@@ -37,4 +39,7 @@ val appModule = module {
 
     factory { HomeScreenDataBuilder() }
     viewModel { RootScreenViewModel(dataBuilder = get()) }
+
+    factory { SettingsScreenDataBuilder() }
+    viewModel { SettingsViewModel(dataBuilder = get(), appPreferences = get()) }
 }
