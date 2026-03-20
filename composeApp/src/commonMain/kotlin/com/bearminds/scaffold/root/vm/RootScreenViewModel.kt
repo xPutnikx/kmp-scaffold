@@ -2,21 +2,28 @@ package com.bearminds.scaffold.root.vm
 
 import com.bearminds.architecture.BaseViewModel
 import com.bearminds.architecture.StyledSnackbarData
+import com.bearminds.scaffold.root.view.HomeScreenDataBuilder
 
-class RootScreenViewModel : BaseViewModel<
-    RootScreenViewModel.Event,
-    RootScreenViewModel.State
-    >() {
+class RootScreenViewModel(
+    private val dataBuilder: HomeScreenDataBuilder,
+) : BaseViewModel<RootScreenContract.Event, RootScreenContract.State>() {
 
-    override val initialState: State = State()
+    override val initialState: RootScreenContract.State = RootScreenContract.State(
+        data = dataBuilder.buildEmptyScreen()
+    )
 
-    override fun handleEvent(event: Event) {
+    init {
+        rebuildScreen()
+    }
+
+    override fun handleEvent(event: RootScreenContract.Event) {
         when (event) {
-            is Event.OnSettingsClicked -> {
-                setEffect { Effect.NavigateToSettings }
+            is RootScreenContract.Event.OnSettingsClicked -> {
+                setEffect { RootScreenContract.Effect.NavigateToSettings }
             }
-            is Event.OnGreetClicked -> {
+            is RootScreenContract.Event.OnGreetClicked -> {
                 setState { copy(greeting = "Hello from MVI!") }
+                rebuildScreen()
                 setEffect {
                     SnackbarEffect(StyledSnackbarData(message = "Greeting updated"))
                 }
@@ -24,17 +31,12 @@ class RootScreenViewModel : BaseViewModel<
         }
     }
 
-    sealed interface Event : ViewEvent {
-        data object OnSettingsClicked : Event
-        data object OnGreetClicked : Event
-    }
-
-    data class State(
-        val title: String = "KMP Scaffold",
-        val greeting: String = "Tap the button below",
-    ) : ViewState
-
-    sealed interface Effect : ViewEffect {
-        data object NavigateToSettings : Effect
+    private fun rebuildScreen() {
+        val currentState = viewState.value
+        val data = dataBuilder.buildScreen(
+            state = currentState,
+            onEvent = ::handleEvent,
+        )
+        setState { copy(data = data) }
     }
 }

@@ -1,9 +1,14 @@
 package com.bearminds.scaffold.root
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import com.bearminds.architecture.RootScreen
+import com.bearminds.scaffold.root.vm.RootScreenContract
 import com.bearminds.scaffold.root.vm.RootScreenViewModel
 
 @Composable
@@ -16,16 +21,17 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is RootScreenViewModel.Effect.NavigateToSettings -> onNavigateToSettings()
-                else -> {} // Snackbar/Haptic handled by RootScreen's EffectProcessor
+                is RootScreenContract.Effect.NavigateToSettings -> onNavigateToSettings()
+                else -> {}
             }
         }
     }
 
-    HomeScreenContent(
-        title = state.title,
-        greeting = state.greeting,
-        onGreetClicked = { viewModel.onEvent(RootScreenViewModel.Event.OnGreetClicked) },
-        onSettingsClicked = { viewModel.onEvent(RootScreenViewModel.Event.OnSettingsClicked) },
-    )
+    RootScreen(
+        showToolbar = true,
+        title = { Text(state.title) },
+        effects = viewModel.effect,
+    ) {
+        state.data.Composable(modifier = Modifier.fillMaxSize())
+    }
 }
