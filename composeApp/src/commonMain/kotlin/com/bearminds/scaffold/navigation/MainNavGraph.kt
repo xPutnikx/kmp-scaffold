@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.bearminds.scaffold.root.RootScreen
+import com.bearminds.scaffold.root.HomeScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -23,7 +23,7 @@ fun MainNavGraph(modifier: Modifier = Modifier) {
             popEnterTransition = { subtleLeftEnter() },
             popExitTransition = { leftToRightExit() },
         ) {
-            RootScreen(
+            HomeScreen(
                 viewModel = koinViewModel(),
                 onNavigateToSettings = {
                     navController.navigate(NavigationRoute.Settings)

@@ -9,14 +9,12 @@ class ExampleViewModelTest {
     @Test
     fun initialStateHasExpectedTitle() {
         val viewModel = RootScreenViewModel()
-        assertEquals("Welcome to KMP Scaffold", viewModel.viewState.value.title)
+        assertEquals("KMP Scaffold", viewModel.viewState.value.title)
     }
 
     @Test
-    fun stateIsNonNullableFromStart() {
+    fun initialStateHasDefaultGreeting() {
         val viewModel = RootScreenViewModel()
-        // BaseViewModel uses non-nullable StateFlow — no null check needed
-        val state: RootScreenViewModel.State = viewModel.viewState.value
-        assertEquals(false, state.title.isEmpty())
+        assertEquals("Tap the button below", viewModel.viewState.value.greeting)
     }
 }

@@ -64,9 +64,11 @@ abstract class BaseViewModel<
 
     interface ViewEffect
 
-    data class SnackbarEffect(val message: String) : ViewEffect
+    data class SnackbarEffect(val data: StyledSnackbarData) : ViewEffect
+    data class SnackbarResourceEffect(val data: StyledSnackbarResourceData) : ViewEffect
     data class HapticFeedbackEffect(val type: HapticType) : ViewEffect
     data object NavigateBackEffect : ViewEffect
+    data class Error(val error: String, val retry: (() -> Unit)? = null)
 
     enum class HapticType {
         LIGHT,
