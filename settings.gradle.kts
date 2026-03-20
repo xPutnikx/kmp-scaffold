@@ -1,4 +1,4 @@
-rootProject.name = "Passkeep"
+rootProject.name = "KmpScaffold"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -33,3 +33,6 @@ plugins {
 }
 
 include(":composeApp")
+include(":architecture")
+include(":theme")
+include(":core")
