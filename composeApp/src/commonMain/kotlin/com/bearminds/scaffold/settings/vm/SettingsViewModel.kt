@@ -21,7 +21,7 @@ class SettingsViewModel(
     override fun handleEvent(event: SettingsContract.Event) {
         when (event) {
             is SettingsContract.Event.OnInitialize -> subscribeToPreferences()
-            is SettingsContract.Event.OnBack -> setEffect { SettingsContract.Effect.NavigateBack }
+            is SettingsContract.Event.OnBack -> setEffect { NavigateBackEffect }
             is SettingsContract.Event.OnThemeToggled -> {
                 viewModelScope.launch {
                     appPreferences.setTheme(event.isDark)

@@ -41,6 +41,7 @@ fun RootScreen(
     showToolbar: Boolean = true,
     title: @Composable () -> Unit = {},
     effects: Flow<BaseViewModel.ViewEffect>? = null,
+    onNavigateBack: (() -> Unit)? = null,
     backAction: @Composable (() -> Unit)? = null,
     containerColor: Color = MaterialTheme.colorScheme.background,
     bottomBar: @Composable () -> Unit = {},
@@ -105,7 +106,7 @@ fun RootScreen(
     }
     val hapticFeedback = LocalHapticFeedback.current
     if (effects != null) {
-        EffectProcessor(snackbarHostState, hapticFeedback, effects)
+        EffectProcessor(snackbarHostState, hapticFeedback, effects, onNavigateBack)
     }
 }
 
@@ -114,11 +115,16 @@ fun RootScreen(
 private fun EffectProcessor(
     snackbarHostState: SnackbarHostState,
     hapticFeedback: androidx.compose.ui.hapticfeedback.HapticFeedback,
-    effectFlow: Flow<BaseViewModel.ViewEffect>
+    effectFlow: Flow<BaseViewModel.ViewEffect>,
+    onNavigateBack: (() -> Unit)?,
 ) {
     LaunchedEffect(Unit) {
         effectFlow.collect { effect ->
             when (effect) {
+                is BaseViewModel.NavigateBackEffect -> {
+                    onNavigateBack?.invoke()
+                }
+
                 is BaseViewModel.SnackbarEffect -> {
                     launch {
                         snackbarHostState.showSnackbar(

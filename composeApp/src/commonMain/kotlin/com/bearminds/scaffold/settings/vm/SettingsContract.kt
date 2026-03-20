@@ -17,8 +17,4 @@ class SettingsContract {
         data class OnThemeToggled(val isDark: Boolean) : Event
         data class OnLanguageChanged(val language: String) : Event
     }
-
-    sealed interface Effect : BaseViewModel.ViewEffect {
-        data object NavigateBack : Effect
-    }
 }

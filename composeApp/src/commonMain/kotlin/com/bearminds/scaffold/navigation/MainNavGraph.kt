@@ -1,5 +1,7 @@
 package com.bearminds.scaffold.navigation
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -41,6 +43,7 @@ fun MainNavGraph(modifier: Modifier = Modifier) {
             SettingsScreen(
                 viewModel = koinViewModel(),
                 onNavigateBack = { navController.navigateUp() },
+                backIcon = Icons.AutoMirrored.Rounded.ArrowBackIos,
             )
         }
     }
